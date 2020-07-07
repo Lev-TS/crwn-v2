@@ -50,9 +50,9 @@ class Directory extends React.Component {
 		return (
 			<div className="directory-menu">
 				{
-					// we can use ES6 syntax to syplify below syntax
+					// we can use ES6 syntax to simplify below syntax
 					// {this.state.sections.map(({ id, ...otherSectionProps}) => (
-					//   <MenuItem key={id} {...otherSectionProps}/>
+					//		<MenuItem key={id} {...otherSectionProps}/>
 					// ))}
 				}
 
