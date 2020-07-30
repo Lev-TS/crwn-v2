@@ -4,9 +4,6 @@ import './App.css';
 // Router components
 import { Switch, Route } from 'react-router-dom';
 
-// Authentication
-import { auth } from './firebase/firebase.utils';
-
 // Components persisting across all pages
 import Header from './components/header/header.component';
 
@@ -14,6 +11,9 @@ import Header from './components/header/header.component';
 import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
 import SignInAndSignUp from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
+
+// Authentication
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 class App extends React.Component {
 	constructor() {
@@ -23,24 +23,42 @@ class App extends React.Component {
 			currentUser: null,
 		};
 	}
-	
-	// handling authentication
-	unsubscribeFromAuth=null
+
+	// handling authentication and user data for the app
+	unsubscribeFromAuth = null;
 	componentDidMount() {
-		this.unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
-			this.setState({ currentUser: user });
-			console.log(user)
+		this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
+			// if user is authenticated and we recieve userAuth object get latest
+			// snapshot object on that user and save data that comes with that
+			// object into state. Else, currentUser is userAuth object, i.e null.
+			if (userAuth) {
+				const userRef = await createUserProfileDocument(userAuth);
+
+				// listen for document changes, e.g. if user data has been updated
+				userRef.onSnapshot((snapShot) => {
+					this.setState({
+						currentUser: {
+							id: snapShot.id,
+							// spreading out the snapshot key/value pairs
+							...snapShot.data(),
+						},
+					});
+
+					console.log(this.state)
+				});
+			} else {
+				this.setState({ currentUser: userAuth });
+			}
 		});
 	}
 	componentWillUnmount() {
 		this.unsubscribeFromAuth();
 	}
 
-
 	render() {
 		return (
 			<div>
-				<Header currentUser={this.state.currentUser}/>
+				<Header currentUser={this.state.currentUser} />
 				<Switch>
 					<Route exact path="/" component={HomePage} />
 					<Route path="/shop" component={ShopPage} />
