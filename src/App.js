@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 
 // Router components
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
 // Components persisting across all pages
 import Header from './components/header/header.component';
@@ -23,6 +23,7 @@ class App extends React.Component {
 	// handling authentication and user data for the app
 	unsubscribeFromAuth = null;
 	componentDidMount() {
+		// notice how we destructure props of this block scope
 		const { setCurrentUser } = this.props;
 
 		this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
@@ -56,15 +57,29 @@ class App extends React.Component {
 				<Switch>
 					<Route exact path="/" component={HomePage} />
 					<Route path="/shop" component={ShopPage} />
-					<Route path="/signin" component={SignInAndSignUp} />
+					<Route
+						exact
+						path="/signin"
+						render={() =>
+							this.props.currentUser ? (
+								<Redirect to="/" />
+							) : (
+								<SignInAndSignUp />
+							)
+						}
+					/>
 				</Switch>
 			</div>
 		);
 	}
 }
 
+const mapStateToProps = ({ user }) => ({
+	currentUser: user.currentUser,
+});
+
 const mapDispatchToProps = (dispatch) => ({
 	setCurrentUser: (user) => dispatch(setCurrentUser(user)),
 });
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
