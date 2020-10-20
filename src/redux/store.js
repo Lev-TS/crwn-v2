@@ -4,7 +4,11 @@ import logger from "redux-logger";
 
 import rootReducer from "./root-reducer";
 
-const middlewares = [logger];
+const middlewares = [];
+
+if (process.env.NOD_ENV === 'development') {
+    middlewares.push(logger)
+}
 
 // this is more scaleable verstion to create middlewares variable and
 // spread it out inside of applyMiddleware function, that's just in case we
