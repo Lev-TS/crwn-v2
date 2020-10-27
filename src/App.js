@@ -1,26 +1,27 @@
-import React from 'react';
-import './App.css';
+import React from "react";
+import "./App.css";
 
 // Router components
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect } from "react-router-dom";
 
 // Components persisting across all pages
-import Header from './components/header/header.component';
+import Header from "./components/header/header.component";
 
 // Page components
-import HomePage from './pages/homepage/homepage.component';
-import ShopPage from './pages/shop/shop.component';
-import SignInAndSignUp from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
-import CheckoutPage from './pages/checkout/checkout.component.jsx';
+import HomePage from "./pages/homepage/homepage.component";
+import ShopPage from "./pages/shop/shop.component";
+import SignInAndSignUp from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
+import CheckoutPage from "./pages/checkout/checkout.component.jsx";
 
 // Authentication
-import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
 
 // Redux
-import { connect } from 'react-redux';
-import { setCurrentUser } from './redux/user/user.actions';
-import { createStructuredSelector } from 'reselect';
-import { selectCurrentUser } from './redux/user/user.selectors';
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+
+import { setCurrentUser } from "./redux/user/user.actions";
+import { selectCurrentUser } from "./redux/user/user.selectors";
 
 class App extends React.Component {
 	// handling authentication and user data for the app
@@ -65,11 +66,7 @@ class App extends React.Component {
 						exact
 						path="/signin"
 						render={() =>
-							this.props.currentUser ? (
-								<Redirect to="/" />
-							) : (
-								<SignInAndSignUp />
-							)
+							this.props.currentUser ? <Redirect to="/" /> : <SignInAndSignUp />
 						}
 					/>
 				</Switch>
