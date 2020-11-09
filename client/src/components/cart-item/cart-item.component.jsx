@@ -12,10 +12,10 @@ const CartItem = ({ item: { imageUrl, price, name, quantity } }) => (
     <ItemDetailsContainer>
       <span>{name}</span>
       <span>
-        {quantity} x €{price}
+        {quantity} x ${price}
       </span>
     </ItemDetailsContainer>
   </CartItemContainer>
 );
 
-export default CartItem;
+export default React.memo(CartItem);
